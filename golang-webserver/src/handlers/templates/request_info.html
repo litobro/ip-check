@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Check</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-300">
+    <div class="container mx-auto max-w-screen-lg p-4 mt-4 border border-gray-500 overflow-hidden">
+        <h1 class="text-2xl font-bold text-left">IP Check Tool</h1>
+        <h3 class="text-xl mt-4">Your connection</h3>
+        <table class="text-left w-full mt-2 py-2 px-2 border border-gray-700">
+            <tr class="border border-gray-700 py-2 px-2">
+                <th class="px-2 py-2 border border-gray-700 whitespace-nowrap">IP</th>
+                <td class="px-2 py-2 border border-gray-700 whitespace-nowrap">{{.IP}}</td>
+            </tr>
+            <tr>
+                <th class="px-2 py-2 border border-gray-700 whitespace-nowrap">User Agent</th>
+                <td class="px-2 py-2 border border-gray-700 whitespace-nowrap">{{.UserAgent}}</td>
+            </tr>
+            <tr>
+                <th class="px-2 py-2 border border-gray-700 whitespace-nowrap">Request Method</th>
+                <td class="px-2 py-2 border border-gray-700 whitespace-nowrap">{{.RequestMethod}}</td>
+            </tr>
+            <tr>
+                <th class="px-2 py-2 border border-gray-700 whitespace-nowrap">Referrer</th>
+                <td class="px-2 py-2 border border-gray-700 whitespace-nowrap">{{.Referrer}}</td>
+            </tr>
+            <tr>
+                <th class="px-2 py-2 border border-gray-700 whitespace-nowrap">X-Forwarded-For</th>
+                <td class="px-2 py-2 border border-gray-700 whitespace-nowrap">{{.XForwardedFor}}</td>
+            </tr>
+        </table>
+        <h3 class="text-xl mt-4">Curl commands</h3>
+        <table class="text-left w-full mt-2 py-2 px-2 border border-gray-700">
+            <tr class="border border-gray-700 py-2 px-2">
+                <th class="px-2 py-2 border border-gray-700 whitespace-nowrap">curl https://{{.Url}}</th>
+                <td class="px-2 py-2 border border-gray-700 whitespace-nowrap">{{.IP}}</td>
+            </tr>
+            <tr class="border border-gray-700 py-2 px-2">
+                <th class="px-2 py-2 border border-gray-700 whitespace-nowrap">curl https://{{.Url}}ip</th>
+                <td class="px-2 py-2 border border-gray-700 whitespace-nowrap">{{.IP}}</td>
+            </tr>
+            <tr>
+                <th class="px-2 py-2 border border-gray-700 whitespace-nowrap">curl https://{{.Url}}ua</th>
+                <td class="px-2 py-2 border border-gray-700 whitespace-nowrap">{{.UserAgent}}</td>
+            </tr>
+            <tr>
+                <th class="px-2 py-2 border border-gray-700 whitespace-nowrap">curl https://{{.Url}}json</th>
+                <td class="px-2 py-2 border border-gray-700">{{.PrettyJson}}</td>
+            </tr>
+        </table>
+        <h3 class="text-xl mt-4">IP Versions</h3>
+        <table class="text-left w-full mt-2 py-2 px-2 border border-gray-700">
+            <tr class="border border-gray-700 py-2 px-2">
+                <th class="px-2 py-2 border border-gray-700 whitespace-nowrap">Any</th>
+                <td class="px-2 py-2 border border-gray-700 whitespace-nowrap"><a href="https://ipcheck.thomasdang.ca" class="text-gray-400 hover:underline">https://ipcheck.thomasdang.ca</a></td>
+            </tr>
+            <tr class="border border-gray-700 py-2 px-2">
+                <th class="px-2 py-2 border border-gray-700 whitespace-nowrap">IPv4</th>
+                <td class="px-2 py-2 border border-gray-700 whitespace-nowrap"><a href="https://ipv4.ipcheck.thomasdang.ca" class="text-gray-400 hover:underline">https://ipv4.ipcheck.thomasdang.ca</a></td>
+            </tr>
+            <tr class="border border-gray-700 py-2 px-2">
+                <th class="px-2 py-2 border border-gray-700 whitespace-nowrap">IPv6</th>
+                <td class="px-2 py-2 border border-gray-700 whitespace-nowrap"><a href="https://ipv6.ipcheck.thomasdang.ca" class="text-gray-400 hover:underline">https://ipv6.ipcheck.thomasdang.ca</a></td>
+            </tr>
+        </table>
+        <h3 class="text-xl mt-4">Compatibility Test</h3>
+        <table class="text-left w-full mt-2 p-2 border border-gray-700">
+            <tr class="border border-gray-700 p-2">
+                <th class="p-2 border border-gray-700 whitespace-nowrap">IPv4</th>
+                <td id="ipv4-status" class="px-2 py-2 border border-gray-700 whitespace-nowrap">Checking...</td>
+            </tr>
+            <tr class="border border-gray-700 p-2">
+                <th class="p-2 border border-gray-700 whitespace-nowrap">IPv6</th>
+                <td id="ipv6-status" class="px-2 py-2 border border-gray-700 whitespace-nowrap">Checking...</td>
+            </tr>
+        </table>
+        <p class="p-2 mt-4 w-full text-center bg-gray-600">© <span id="current-year" class="mx-2"></span><a href="https://thomasdang.ca">Thomas Dang</a></p>
+    </div>
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        function checkEndpoint(url, elementId) {
+            fetch(url)
+                .then(response => response.text())
+                .then(body => {
+                    console.log(body);
+                    document.getElementById(elementId).textContent = `Success: ${body}`;
+                })
+                .catch(error => {
+                    document.getElementById(elementId).textContent = 'Failed';
+                });
+        }
+
+        checkEndpoint('https://ipv4.ipcheck.thomasdang.ca/ip', 'ipv4-status');
+        checkEndpoint('https://ipv6.ipcheck.thomasdang.ca/ip', 'ipv6-status');
+    </script>
+</body>
+</html>
