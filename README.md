@@ -2,9 +2,17 @@
 
 A simple website for checking IPv4 and IPv6 of client.
 
+Demo: [https://ipcheck.thomasdang.ca](https://ipcheck.thomasdang.ca)
+
+## Features
+
+Shows the IPv4 or IPv6 of a client. Can be curl'd (or other non-interactive request method) to receive specific information. Commands are displayed on the web page. 
+
+Has a simple javascript checker that determines if IPv4 and IPv6 are each available and displays the respective IP. 
+
 ## Usage
 
-You will want to update the template in `golang-webserver/src/handlers/templates` with your URLs. 
+You will want to update the template in `golang-webserver/src/handlers/templates` with your URLs.
 
 Compile using Go 1.23 using `go build main.go`
 
@@ -28,7 +36,9 @@ StandardError=append:/var/log/ip-check.log
 WantedBy=multi-user.target
 ```
 
-I run an nginx instance in a container hosted with the file. There are many other ways to deploy this more securely or efficiently. 
+I run an nginx instance in a container hosted with the file. There are many other ways to deploy this more securely or efficiently.
+
+You'll want to configure a subdomain with just A records and one with just AAAA records, and one with both. This will allow you to test the connectivity of both and provide the option to resolve one or the other.
 
 ## To-do
 
